@@ -1,5 +1,6 @@
 package net.orcinus.overweightfarming.blocks;
 
+import net.minecraft.world.item.Item;
 import net.orcinus.overweightfarming.init.OFBlocks;
 import net.orcinus.overweightfarming.init.OFItems;
 import net.orcinus.overweightfarming.init.OFParticleTypes;
@@ -21,11 +22,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.orcinus.overweightfarming.integration.CompatHandler;
+import net.orcinus.overweightfarming.integration.CompatObjects;
 
 import java.util.Random;
+import java.util.function.Supplier;
 
 public class PeeledMelonBlock extends Block {
     private final SeedState seedState;
+    private final Supplier<? extends Item> melonJuiceSup =
+            CompatHandler.farmersdelight ? CompatObjects.MELON_JUICE : OFItems.MELON_JUICE;
 
     public PeeledMelonBlock(SeedState seedState, Properties properties) {
         super(properties);
@@ -81,9 +87,9 @@ public class PeeledMelonBlock extends Block {
         } else if (stack.getItem() == Items.GLASS_BOTTLE) {
             stack.shrink(1);
             if (stack.isEmpty()) {
-                player.setItemInHand(hand, new ItemStack(OFItems.MELON_JUICE.get()));
-            } else if (!player.getInventory().add(new ItemStack(OFItems.MELON_JUICE.get()))) {
-                player.drop(new ItemStack(OFItems.MELON_JUICE.get()), false);
+                player.setItemInHand(hand, new ItemStack(melonJuiceSup.get()));
+            } else if (!player.getInventory().add(new ItemStack(melonJuiceSup.get()))) {
+                player.drop(new ItemStack(melonJuiceSup.get()), false);
             }
             world.gameEvent(player, GameEvent.FLUID_PICKUP, pos);
             world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.BOTTLE_FILL, SoundSource.NEUTRAL, 1.0F, 1.0F);
