@@ -1,6 +1,8 @@
 package net.orcinus.overweightfarming.blocks;
 
+import net.minecraftforge.fml.ModList;
 import net.orcinus.overweightfarming.init.OFBlocks;
+import net.orcinus.overweightfarming.init.OFCompatObjects;
 import net.orcinus.overweightfarming.init.OFItems;
 import net.orcinus.overweightfarming.init.OFParticleTypes;
 import net.minecraft.core.BlockPos;
@@ -79,11 +81,12 @@ public class PeeledMelonBlock extends Block {
             world.playSound(null, pos, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 1.0F, 1.4F);
             return InteractionResult.sidedSuccess(world.isClientSide());
         } else if (stack.getItem() == Items.GLASS_BOTTLE) {
+            ItemStack melonJuice = new ItemStack(ModList.get().isLoaded("farmersdelight") ? OFCompatObjects.FD_MELON_JUICE.get() : OFItems.MELON_JUICE.get());
             stack.shrink(1);
             if (stack.isEmpty()) {
-                player.setItemInHand(hand, new ItemStack(OFItems.MELON_JUICE.get()));
-            } else if (!player.getInventory().add(new ItemStack(OFItems.MELON_JUICE.get()))) {
-                player.drop(new ItemStack(OFItems.MELON_JUICE.get()), false);
+                player.setItemInHand(hand, melonJuice);
+            } else if (!player.getInventory().add(melonJuice)) {
+                player.drop(melonJuice, false);
             }
             world.gameEvent(player, GameEvent.FLUID_PICKUP, pos);
             world.playSound(player, player.getX(), player.getY(), player.getZ(), SoundEvents.BOTTLE_FILL, SoundSource.NEUTRAL, 1.0F, 1.0F);
